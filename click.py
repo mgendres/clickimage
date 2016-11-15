@@ -21,7 +21,7 @@ img = copy.deepcopy(img0)
 print img.shape
 
 fig = plt.figure()
-myobj = plt.imshow(img, interpolation=None)
+myobj = plt.imshow(img, interpolation='nearest')
 
 def Complement(rgb):
   comp = np.ones(len(rgb), dtype=int) - rgb
@@ -32,30 +32,32 @@ def Complement(rgb):
 
 # Actions taken upon click
 coords = []
-def action(event):
-  i, j = event.xdata, event.ydata # get pixels
-  i += 0.5
-  j += 0.5
-  print '%f, %f'%(i, j)
-  u = int(i)
-  v = int(j)
-  coords.append( (u, v) ) # record pixels
-  img[ v, u ] = Complement( img0[ v, u ] )
-  if (1):
-    for s in [-3, -2, -1, 1, 2, 3]:
-      img[ v+s, u ] = Complement( img0[ v+s, u ] )
-      img[ v, u+s ] = Complement( img0[ v, u+s ] )
-  if (0):
-    for s in range(-3,4):
-      for t in range(-3,4):
-        img[ v+s, u+t ] = Complement( img0[ v+s, u+t ] )
-    for coord in coords:
-      u,v=coord
-      img[v,u]=img0[ v, u ]
-  myobj.set_data(img) # update image data
-  plt.draw() # redraw image
+def onclick(event):
+  if event.dblclick:
+    i, j = event.xdata, event.ydata # get pixels
+    i += 0.5
+    j += 0.5
+    print '%f, %f'%(i, j)
+    u = int(i)
+    v = int(j)
+    coords.append( (u, v) ) # record pixels
+    img[ v, u ] = Complement( img0[ v, u ] )
+    if (1):
+      for s in [-3, -2, -1, 1, 2, 3]:
+        img[ v+s, u ] = Complement( img0[ v+s, u ] )
+        img[ v, u+s ] = Complement( img0[ v, u+s ] )
+    if (0):
+      for s in range(-3,4):
+        for t in range(-3,4):
+          img[ v+s, u+t ] = Complement( img0[ v+s, u+t ] )
+      for coord in coords:
+        u,v=coord
+        img[v,u]=img0[ v, u ]
+    myobj.set_data(img) # update image data
+    plt.draw() # redraw image
 
-fig.canvas.mpl_connect('button_press_event', action)
+fig.canvas.mpl_connect('button_press_event', onclick)
 plt.show()
 
+print "Pixels selected:"
 print list(set(coords))
