@@ -24,10 +24,13 @@ fig = plt.figure()
 myobj = plt.imshow(img, interpolation='nearest')
 
 def Complement(rgb):
-  comp = np.ones(len(rgb), dtype=int) - rgb
-  if len(comp)==4:
-    comp[-1] = 1
-#  comp = [0,0,0,1]
+#  comp = np.ones(len(rgb), dtype=int) - rgb
+#  if len(comp)==4:
+#    comp[-1] = 1
+  comp = np.ones(len(rgb), dtype=int)
+  comp[0]=1
+  comp[1]=0
+  comp[2]=1
   return comp
 
 # Actions taken upon click
